@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="warn">
+    <properties>
+        <!-- 输出文件的路径 -->
+        <property name="LOG_HOME">/var/log</property>
+    </properties>
+    <appenders>
+        <!-- 控制台日志输出 -->
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="%d-[TDM] %p %t %c - %m%n" charset="UTF-8"/>
+        </Console>
+        <!-- 记录日志文件 -->
+        <RollingFile name="DevLog" fileName="${LOG_HOME}/nettyserver.log" filePattern="${LOG_HOME}/nettyserver.log_%d{yyyy-MM-dd}_%i.log" append="true">
+            <PatternLayout pattern="%d %p %c %L %m%n" charset="UTF-8"/>
+            <Policies>
+                <!-- 每24小时更新一次 ,inteverval结合分割的精度使用yyyy-MM-dd则精度为天,yyyy-MM-dd-HH则精度为小时-->
+                <TimeBasedTriggeringPolicy modulate="true" interval="1" />
+                <SizeBasedTriggeringPolicy size="5MB" />
+            </Policies>
+            <!-- 最多备份30个 -->
+            <DefaultRolloverStrategy max="60" />
+        </RollingFile>
+    </appenders>
+    <loggers>
+        <!-- spring的相关日志 -->
+        <logger name="org.springframework.core" level="info"></logger>
+        <logger name="org.springframework.beans" level="info"></logger>
+        <logger name="org.springframework.context" level="info"></logger>
+        <logger name="org.springframework.web" level="info"></logger>
+
+        <!-- mybtis 和 sql 的相关日志 -->
+        <logger name="org.mybatis" level="debug"></logger>
+        <logger name="java.sql" level="debug" ></logger>
+        <logger name="com.saxo" level="debug" ></logger>
+
+    	<!-- Apache Loggers -->
+        <logger name="org.apache.shiro" level="info"/>
+
+        <!-- hikari Loggers -->
+        <logger name="com.zaxxer.hikari" level="info"/>
+        
+        <root level="info">
+            <appender-ref ref="DevLog" level="warn" />
+            <appender-ref ref="Console" level="debug" />
+        </root>
+    </loggers>
+</configuration>
